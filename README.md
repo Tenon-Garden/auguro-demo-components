@@ -42,6 +42,14 @@ Now, as you develop normally, you're likely going to want to update the submodul
 git submodule update --remote
 ```
 
+If multiple developers are working on this repository and new submodules have been added, a `git pull` will call `git fetch` on all submodules, but will not run the full updates. In this case, you need to run:
+
+```bash
+git submodule update --init --recursive
+```
+
+This is the same command as shown initially. As such, you may prefer to always run that command, in case of new submodules from collaborators. Since it will sometimes be necessary to do this, you may just prefer to use that command all the time.
+
 ## Run
 
 ```bash
