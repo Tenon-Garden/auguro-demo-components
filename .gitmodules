@@ -1,0 +1,4 @@
+[submodule "auguro-illustrations"]
+	path = auguro-illustrations
+	url = https://github.com/Tenon-Garden/auguro-illustrations
+	branch = trunk
