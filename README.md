@@ -1,12 +1,30 @@
 # augurō Component Demos
 
-This is a [Deno]() [React.js]() application that provides a gallery of components, demonstrating designs and interactivity that could (should) be used in the __augurō__ application.
+This is a [Deno](https://deno.land/) [React.js](https://reactjs.org/) application that provides a gallery of components, demonstrating designs and interactivity that could (should) be used in the __augurō__ application.
 
 This is a testing-grounds repository and is meant for learning about Deno and React.js best-practices, as well as to demonstrate and facilitate the designs for the __augurō__ app.
 
 ## Setup (Dependencies)
 
-Install __Deno__ ....
+Install __Deno__...
+
+... in macOS and Linux with `curl`:
+
+```bash
+curl -fsSL https://deno.land/x/install/install.sh | sh
+```
+
+> You can install also from `brew` on macOS, but we had trouble with this as it was building from the Rust source through `cargo` and it was taking more than 30 minutes on a Macbook Air.
+
+... in Windows 10 with PowerShell:
+
+```powershell
+iwr https://deno.land/x/install/install.ps1 -useb | iex
+```
+
+You should follow any prompts that print-out, so as to add `deno` to your `PATH` for easier use when calling the application.
+
+You will also need a modern web-browser with a JavaScript engine running to be able to see the functionality of the __React.js__ application.
 
 ### Submodules
 
