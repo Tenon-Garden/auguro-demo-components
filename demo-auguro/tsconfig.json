@@ -1,0 +1,5 @@
+{
+  "compilerOptions": {
+  },
+  "include": ["components", "src/custom.d.ts"]
+}
