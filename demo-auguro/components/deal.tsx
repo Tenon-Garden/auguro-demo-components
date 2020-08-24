@@ -1,18 +1,15 @@
-import { React, Component, ComponentClass } from "../deps.tsx";
+import {
+   React,
+} from "../deps.tsx";
 
-// import {
-//    ReactComponent as IconDealStateLead
-// } from "../../auguro-illustrations/svg-plain/icon-upright-deal-state-lead.svg";
-
-
-function Deal({}: any) {
+export default function Deal({}: any) {
    return (
       <>
-         <div>
-            <div>
-               <img src="../../auguro-illustrations/svg-plain/icon-upright-deal-state-lead.svg" />
+         <div className="badge_deal">
+            <div className="deal_icon">
+               <img src="/auguro-illustrations/svg-plain/icon-upright-deal-state-lead.svg" />
             </div>
-            <div>
+            <div className="deal_body">
                <h1>Deal Name</h1>
                <h4>Deal Subtext</h4>
                <ul>
@@ -24,8 +21,4 @@ function Deal({}: any) {
          </div>
       </>
   );
-}
-
-export default {
-   Deal,
 };
