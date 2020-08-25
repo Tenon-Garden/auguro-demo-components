@@ -1,0 +1,12 @@
+.badge_deal {
+  display: block;
+  padding: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  color: white;
+  background-color: darkblue;
+}
+
+.deal_icon,
+.deal_body {
+  display: inline-block;
+}

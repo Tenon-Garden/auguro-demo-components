@@ -1,26 +1,31 @@
-import { React } from "./deps.tsx";
+import {
+   React,
+   ReactDOMServer,
+} from "./deps.tsx";
+
+import { Deal } from "./components/mod.ts";
+
 
 declare global {
    namespace JSX {
       interface IntrinsicElements {
-         button: any;
-         div: any;
-         h1: any;
-         p: any;
+         [key: string]: any;
       }
    }
 };
 
 const App = () => {
-  const [count, setCount] = (React as any).useState(0);
-
+   const [count, setCount] = (React as any).useState(0);
    return (
-      <div>
-         <h1>Hello DenoLand!</h1>
-         <button onClick={() => setCount(count + 1)}>Click the 🦕</button>
-         <p>You clicked the 🦕 {count} times</p>
-      </div>
-  );
+      <>
+         <Deal />
+         <div>
+            <h1>Hello DenoLand!</h1>
+            <button onClick={() => setCount(count + 1)}>Click the 🦕</button>
+            <p>You clicked the 🦕 {count} times</p>
+          </div>
+      </>
+   );
 };
 
-export default App;
+export { App, Deal, };

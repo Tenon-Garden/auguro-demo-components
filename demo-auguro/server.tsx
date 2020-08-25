@@ -1,14 +1,21 @@
 import { 
    serve,
+   ServerRequest,
+   serveFile,
    React,
    ReactDOMServer,
+   engineFactory,
 } from "./deps.tsx";
 
-import App from "./app.tsx";
+import { App, Deal, } from "./app.tsx";
 
 
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 
+let root_dir = Deno.cwd();
+if (!root_dir.endsWith("demo-auguro/")) {
+   root_dir += "/demo-auguro";
+}
 
 const server_config = {
    host: "localhost",
@@ -19,48 +26,94 @@ const s = serve(
    server_config,
 );
 
-console.log(
-   `🦕 Deno server running...
+console.log(`
+🦕 Deno server running...
 🦕 http://${server_config.host}:${server_config.port}/
 🦕 Press CTRL+C to quit...
-`
-);
+`);
 
-const js_filename = "demo.js";
-const js = `import React from "https://dev.jspm.io/react@16.13.1";
-import ReactDOM from "https://dev.jspm.io/react-dom@16.13.1";
-const App = ${App};
-ReactDOM.hydrate(React.createElement(App), document.body);`;
-const js_content = new TextEncoder().encode(js);
+const handlebarsEngine = engineFactory.getHandlebarsEngine();
 
-const html_content = `<html>
-<head>
-  <script type="module" src="${js_filename}"></script>
-  <style>* { font-family: Helvetica; }</style>
-</head>
-<body>
-   ${(ReactDOMServer as any).renderToString(<App />)}
-</body>
-</html>`;
+async function fileExists(path: string) {
+   try {
+      const stats = await Deno.lstat(path);
+      return (stats && stats.isFile);
+   } catch(err) {
+      console.log(err);
+      return (false);
+   }
+};
 
-const body_content = new TextEncoder().encode(html_content);
+async function request_handle(request_obj: ServerRequest, template_map: object) {
+   let resp_str = null;
+   let code = 500;
+   let content_type = "text/plain";
+   const req_file = (
+      (request_obj.url === "/")
+      ? `${root_dir}/static/demo.html`
+      : (
+         request_obj.url.startsWith("/auguro-illustrations")
+         ? `${root_dir}/..${request_obj.url}`
+         : `${root_dir}/static${request_obj.url}`
+      )
+   );
+   console.log(req_file);
+   const file_ext = req_file.substr(req_file.lastIndexOf(".") + 1);
+   console.log(file_ext);
+   if (await fileExists(req_file)) {
+      switch (file_ext) {
+         case ("svg"):
+            content_type = "image/svg+xml";
+            break;
+         case ("css"):
+            content_type = "text/css";
+            break;
+         case ("js"):
+            content_type = "text/javascript";
+            break;
+         case ("html"):
+            content_type = "text/html";
+            break;
+         default:
+            content_type = "text/plain";
+            break;
+      }
+      const template_contents = await Deno.readTextFile(req_file);
+      resp_str = handlebarsEngine(
+         template_contents,
+         template_map,
+      );
+      code = 200;
+   } else {
+      resp_str = await Deno.readTextFile(`${root_dir}/static/404.html`);
+      code = 404;
+   }
+   return (
+      {
+         resp: resp_str,
+         resp_code: code,
+         resp_type: content_type,
+      }
+   );
+}
+
 
 for await (const req of s) {
    if (DEBUG_MODE) {
       console.log(req.url);
    };
-   if (req.url === `/${js_filename}`) {
-      const resp_obj = {
-         body: js_content,
-         headers: new Headers(
-            { "content-type": "text/javascript", },
-         ),
-      };
-      req.respond(resp_obj);
-   } else {
-      const resp_obj = {
-         body: body_content,
-      };
-      req.respond(resp_obj);
-   }
+   const template_map = {
+      "App": `${App}`,
+      "Deal": `${Deal}`,
+   };
+   const handle_resp = await request_handle(req, template_map);
+   console.log(handle_resp);
+   const resp_obj = {
+      body: handle_resp.resp,
+      status: handle_resp.resp_code,
+      headers: new Headers(
+         { "content-type": handle_resp.resp_type, },
+      ),
+   };
+   req.respond(resp_obj);
 };
