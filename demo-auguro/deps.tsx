@@ -1,6 +1,6 @@
 // Standard Library
-export { serve } from "https://deno.land/std@0.66.0/http/server.ts";
-export { serveFile } from "https://deno.land/std@0.66.0/http/file_server.ts";
+export { serve, ServerRequest, } from "https://deno.land/std/http/server.ts";
+export { serveFile } from "https://deno.land/std/http/file_server.ts";
 
 // React.js
 export { default as React } from "https://dev.jspm.io/react@16.13.1";
